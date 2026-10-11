@@ -34,9 +34,23 @@ function Index() {
   const [success, setSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
-  const [date, setDate] = useState("");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
   const today = new Date();
-  const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const yearFor = (m: string) => m !== "" && Number(m) < today.getMonth() ? today.getFullYear() + 1 : today.getFullYear();
+  const year = yearFor(month);
+  const monthIndex = month === "" ? today.getMonth() : Number(month);
+  const minDay = month !== "" && monthIndex === today.getMonth() ? today.getDate() : 1;
+  const days = Array.from({ length: daysInMonth(year, monthIndex) }, (_, i) => i + 1).filter(d => d >= minDay);
+  const preferredDate = month !== "" && day !== "" ? `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}` : "";
+  function pickMonth(value: string) {
+    setMonth(value);
+    const chosen = Number(day);
+    if (value === "" || !chosen) return;
+    const y = yearFor(value);
+    const lowest = Number(value) === today.getMonth() && y === today.getFullYear() ? today.getDate() : 1;
+    if (chosen < lowest || chosen > daysInMonth(y, Number(value))) setDay("");
+  }
   function submitBooking(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
