@@ -26,6 +26,9 @@ const services = [
   { name: "Ремонт двигателя", icon: Cog, description: "От небольшого ремонта до капитального восстановления.", detail: "после диагностики" },
   { name: "Обслуживание кондиционера", icon: Wind, description: "Диагностика, заправка и чистка. Свежесть в каждой поездке.", detail: "от 45 минут" },
 ];
+const MONTHS = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const daysInMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate();
+
 function Brand() {
   return <a href="#" aria-label="ТОЧКА — на главную" className="flex items-center gap-2.5"><Wrench className="brand-symbol" strokeWidth={2.5} /><div><div className="brand-name">ТОЧКА<span className="text-primary">.</span></div><div className="mt-1.5 text-[8px] font-semibold tracking-[2px] text-muted-foreground">НЕЗАВИСИМЫЙ АВТОСЕРВИС</div></div></a>;
 }
@@ -34,9 +37,23 @@ function Index() {
   const [success, setSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
-  const [date, setDate] = useState("");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
   const today = new Date();
-  const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const yearFor = (m: string) => m !== "" && Number(m) < today.getMonth() ? today.getFullYear() + 1 : today.getFullYear();
+  const year = yearFor(month);
+  const monthIndex = month === "" ? today.getMonth() : Number(month);
+  const minDay = month !== "" && monthIndex === today.getMonth() ? today.getDate() : 1;
+  const days = Array.from({ length: daysInMonth(year, monthIndex) }, (_, i) => i + 1).filter(d => d >= minDay);
+  const preferredDate = month !== "" && day !== "" ? `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}` : "";
+  function pickMonth(value: string) {
+    setMonth(value);
+    const chosen = Number(day);
+    if (value === "" || !chosen) return;
+    const y = yearFor(value);
+    const lowest = Number(value) === today.getMonth() && y === today.getFullYear() ? today.getDate() : 1;
+    if (chosen < lowest || chosen > daysInMonth(y, Number(value))) setDay("");
+  }
   function submitBooking(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -45,7 +62,8 @@ function Index() {
     setSuccess(true);
     form.reset();
     setService("");
-    setDate("");
+    setMonth("");
+    setDay("");
   }
   const nav = [{ href: "#services", label: "Услуги" }, { href: "#about", label: "Почему мы" }, { href: "#contacts", label: "Контакты" }];
   return <div>
@@ -87,14 +105,17 @@ function Index() {
           <div className="pt-2"><p className="eyebrow text-primary mb-4">БЕЗ ОЧЕРЕДЕЙ И ЛИШНИХ ЗВОНКОВ</p><h2 className="section-heading">Хороший сервис<br />начинается с записи<span className="text-primary">.</span></h2><p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">Выберите удобное время. Мы перезвоним, уточним детали и подготовимся к вашему приезду.</p><div className="mt-9 space-y-5">{["Согласуем работы и стоимость заранее", "Подберём запчасти для вашего автомобиля", "Сообщим, когда автомобиль будет готов"].map(text => <div key={text} className="flex items-center gap-3 text-xs"><span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10"><Check className="size-3 text-primary" /></span>{text}</div>)}</div><div className="mt-10 border-t border-border pt-7"><p className="text-xs text-muted-foreground">Нужна помощь с выбором услуги?</p><a href="tel:+74951234567" className="mt-3 flex items-center gap-3 text-xl font-bold"><Phone className="size-5 text-primary" />+7 (495) 123-45-67</a><p className="mt-2 text-[11px] text-muted-foreground">Позвоните — подскажем и запишем.</p></div></div>
           <form method="post" onSubmit={submitBooking} className="booking-form">
             <h3 className="text-xl font-bold">Записаться на сервис</h3><p className="mt-2 text-xs text-muted-foreground">Оставьте заявку — остальное мы возьмём на себя.</p>
+            <input type="hidden" name="preferredDate" value={preferredDate} readOnly />
             <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2">
               <label className="form-field">Ваше имя<Input name="fullName" autoComplete="name" required placeholder="Иван Петров" className="form-control" /></label>
-              <label className="form-field">Номер телефона <span className="sr-only">обязательно</span><Input name="phone" type="tel" autoComplete="tel" required pattern="[+0-9()\s\-]{7,22}" title="Введите номер телефона: от 7 до 22 символов, цифры, пробелы, скобки и знак +" placeholder="+7 (___) ___-__-__" className="form-control" /></label>
+              <label className="form-field">Номер телефона <span className="sr-only">обязательно</span><Input name="phone" type="tel" autoComplete="tel" required pattern="[+0-9\(\)\s\-]{7,22}" title="Введите номер телефона: от 7 до 22 символов, цифры, пробелы, скобки и знак +" placeholder="+7 (___) ___-__-__" className="form-control" /></label>
               <label className="form-field sm:col-span-2">Марка и модель автомобиля<Input name="carModel" required placeholder="Например, Volkswagen Polo" className="form-control" /></label>
               <label className="form-field sm:col-span-2">Какая услуга нужна?<select name="service" value={service} onChange={e => setService(e.target.value)} required className="form-control"><option value="" disabled>Выберите услугу</option>{services.map(item => <option key={item.name}>{item.name}</option>)}<option>Плановое ТО</option><option>Другое / нужна консультация</option></select></label>
-              <label className="form-field">Удобная дата<Input name="preferredDate" type="date" min={minDate} value={date} onChange={e => setDate(e.target.value)} required className="form-control" /></label>
-              <label className="form-field">Удобное время<select name="timeSlot" required defaultValue="" className="form-control"><option value="" disabled>Выберите время</option><option value="morning">Утро · 09:00–12:00</option><option value="afternoon">День · 12:00–17:00</option><option value="evening">Вечер · 17:00–20:00</option></select></label>
+              <label className="form-field">Месяц<select name="preferredMonth" value={month} onChange={e => pickMonth(e.target.value)} required className="form-control"><option value="" disabled>Выберите месяц</option>{MONTHS.map((name, i) => <option key={name} value={i}>{name}</option>)}</select></label>
+              <label className="form-field">Число<select name="preferredDay" value={day} onChange={e => setDay(e.target.value)} required disabled={month === ""} className="form-control"><option value="" disabled>{month === "" ? "Сначала месяц" : "Выберите число"}</option>{days.map(d => <option key={d} value={d}>{d}</option>)}</select></label>
+              <label className="form-field sm:col-span-2">Удобное время<select name="timeSlot" required defaultValue="" className="form-control"><option value="" disabled>Выберите время</option><option value="morning">Утро · 09:00–12:00</option><option value="afternoon">День · 12:00–17:00</option><option value="evening">Вечер · 17:00–20:00</option></select></label>
             </div>
+            <p className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground"><CalendarDays className="size-3.5 shrink-0 text-primary" />Выбирайте только число и месяц — год подставим автоматически{preferredDate ? `: ${preferredDate.split("-").reverse().join(".")}` : ""}.</p>
             <Button type="submit" variant="garage" size="cta" className="mt-6 w-full justify-between">Подтвердить запись <ArrowRight /></Button>
             <p className="mt-4 text-center text-[10px] leading-5 text-muted-foreground">Нажимая кнопку, вы соглашаетесь с <button type="button" className="underline underline-offset-2 hover:text-foreground" onClick={() => setPolicyOpen(true)}>политикой конфиденциальности</button></p>
           </form>
