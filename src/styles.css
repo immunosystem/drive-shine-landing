@@ -142,3 +142,87 @@
     color: var(--color-foreground);
   }
 }
+
+/* Modern Garage: graphite surfaces, signal green, restrained industrial type. */
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.16 0.004 260);
+  --foreground: oklch(0.97 0.003 260);
+  --card: oklch(0.205 0.005 260);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.89 0.22 126);
+  --primary-foreground: oklch(0.17 0.02 126);
+  --secondary: oklch(0.255 0.006 260);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.23 0.004 260);
+  --muted-foreground: oklch(0.67 0.008 260);
+  --accent: oklch(0.27 0.012 126);
+  --accent-foreground: var(--primary);
+  --border: oklch(0.30 0.004 260);
+  --input: oklch(0.33 0.004 260);
+  --ring: var(--primary);
+  --warm: oklch(0.84 0.15 80);
+  --overlay: oklch(0.09 0.003 260 / 80%);
+  --hero-shade: linear-gradient(90deg, oklch(0.12 0.004 260 / 97%) 0%, oklch(0.12 0.004 260 / 78%) 32%, oklch(0.12 0.004 260 / 12%) 75%);
+  --hero-bottom: linear-gradient(0deg, var(--background), transparent 45%);
+  --font-body: 'Manrope', sans-serif;
+  --font-heading: 'Manrope', sans-serif;
+}
+@theme inline {
+  --color-warm: var(--warm);
+  --color-overlay: var(--overlay);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+}
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; color-scheme: dark; }
+  body { font-family: var(--font-body); letter-spacing: 0; }
+  h1, h2, h3 { font-family: var(--font-heading); letter-spacing: 0; }
+  ::selection { background: var(--primary); color: var(--primary-foreground); }
+}
+.site-container { width: min(1200px, calc(100% - 80px)); margin-inline: auto; }
+.garage-header { height: 88px; }
+.brand-name { font-size: 25px; font-weight: 850; line-height: 1; }
+.brand-symbol { width: 35px; height: 35px; color: var(--primary); }
+.hero { min-height: 650px; position: relative; overflow: hidden; }
+.hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 57%; }
+.hero::before { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--hero-shade); }
+.hero::after { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--hero-bottom); pointer-events: none; }
+.hero-content { position: relative; z-index: 2; padding-top: 83px; padding-bottom: 75px; }
+.hero-heading { font-size: 60px; font-weight: 800; line-height: 1.12; max-width: 680px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.7px; text-transform: uppercase; }
+.section-heading { font-size: 36px; font-weight: 750; line-height: 1.25; }
+.service-card { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 26px; transition: transform 200ms, border-color 200ms, background 200ms; }
+.service-card:hover { transform: translateY(-5px); border-color: var(--primary); background: var(--secondary); }
+.service-icon { width: 49px; height: 49px; border-radius: 8px; background: var(--muted); display: grid; place-items: center; color: var(--primary); }
+.booking-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 96px; }
+.booking-form { padding: 34px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }
+.form-field { display: grid; gap: 10px; font-size: 12px; font-weight: 600; min-width: 0; }
+.form-control { height: 48px; background: var(--background); border: 1px solid var(--input); border-radius: 5px; width: 100%; padding-inline: 14px; color: var(--foreground); font-size: 13px; font-weight: 400; outline: none; transition: border-color 150ms; }
+.form-control:focus { border-color: var(--primary); }
+.map-placeholder { height: 280px; position: relative; overflow: hidden; background-color: var(--muted); background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size: 48px 48px; border: 1px solid var(--border); border-radius: 8px; }
+.map-placeholder::after { content: ''; position: absolute; width: 150%; height: 32px; background: var(--secondary); border-block: 1px solid var(--input); top: 40%; left: -20%; transform: rotate(-28deg); }
+.map-label { position: relative; z-index: 2; background: var(--background); border: 1px solid var(--border); padding: 12px 20px; border-radius: 5px; }
+.reveal { animation: enter 650ms ease-out both; }
+@keyframes enter { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 1600px) { .hero { min-height: 700px; } .hero-photo { object-position: center 60%; } }
+@media (max-width: 767px) {
+  .site-container { width: calc(100% - 40px); }
+  .garage-header { height: 72px; }
+  .brand-name { font-size: 21px; }
+  .hero { min-height: 700px; }
+  .hero-photo { object-position: 68% center; }
+  .hero::before { background: linear-gradient(90deg, oklch(0.12 0.004 260 / 93%), oklch(0.12 0.004 260 / 45%)); }
+  .hero-content { padding-top: 64px; padding-bottom: 60px; }
+  .hero-heading { font-size: 41px; line-height: 1.16; }
+  .section-heading { font-size: 28px; }
+  .booking-layout { grid-template-columns: 1fr; gap: 36px; }
+  .booking-form { padding: 22px; }
+  .service-card { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
