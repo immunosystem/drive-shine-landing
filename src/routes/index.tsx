@@ -26,6 +26,9 @@ const services = [
   { name: "Ремонт двигателя", icon: Cog, description: "От небольшого ремонта до капитального восстановления.", detail: "после диагностики" },
   { name: "Обслуживание кондиционера", icon: Wind, description: "Диагностика, заправка и чистка. Свежесть в каждой поездке.", detail: "от 45 минут" },
 ];
+const MONTHS = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const daysInMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate();
+
 function Brand() {
   return <a href="#" aria-label="ТОЧКА — на главную" className="flex items-center gap-2.5"><Wrench className="brand-symbol" strokeWidth={2.5} /><div><div className="brand-name">ТОЧКА<span className="text-primary">.</span></div><div className="mt-1.5 text-[8px] font-semibold tracking-[2px] text-muted-foreground">НЕЗАВИСИМЫЙ АВТОСЕРВИС</div></div></a>;
 }
