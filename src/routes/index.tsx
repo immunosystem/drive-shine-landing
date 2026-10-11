@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { ArrowUpRight, ArrowRight, Phone, MapPin, Clock3, ShieldCheck, BadgeCheck, Check, CheckCheck, Wrench, Droplets, Disc3, ScanLine, Settings2, Cog, Wind, Menu, X, Star } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Phone, MapPin, Clock3, ShieldCheck, BadgeCheck, Check, CheckCheck, Wrench, Droplets, Disc3, ScanLine, Settings2, Cog, Wind, Menu, X, Star, Mail, Send, MessageCircle, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -143,7 +143,35 @@ function Index() {
       </section>
     </main>
 
-    <footer className="border-t border-border"><div className="site-container grid gap-6 py-8 md:grid-cols-[1fr_auto] md:items-center"><div className="flex flex-wrap items-center gap-6"><Brand /><span className="text-[10px] text-muted-foreground">© {new Date().getFullYear()} ТОЧКА. Все права защищены.</span></div><Button variant="link" className="justify-start p-0 text-[10px] text-muted-foreground" onClick={() => setPolicyOpen(true)}>Политика конфиденциальности <ArrowUpRight className="size-3" /></Button></div></footer>
+    <footer className="border-t border-border pb-24 md:pb-0">
+      <div className="site-container grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="min-w-0"><Brand /><p className="mt-5 max-w-[240px] text-[11px] leading-6 text-muted-foreground">Независимый автосервис в Москве. Честный ремонт, прозрачные цены и гарантия на все работы.</p><div className="mt-6 flex items-center gap-3">
+          <a href="https://t.me/tochka_auto" target="_blank" rel="noreferrer" aria-label="Telegram" className="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"><Send className="size-4" /></a>
+          <a href="https://wa.me/74951234567" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"><MessageCircle className="size-4" /></a>
+          <a href="https://instagram.com/tochka_auto" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"><Instagram className="size-4" /></a>
+          <a href="https://vk.com/tochka_auto" target="_blank" rel="noreferrer" aria-label="ВКонтакте" className="flex size-9 items-center justify-center rounded-md border border-border text-[10px] font-bold text-muted-foreground transition-colors hover:border-primary hover:text-primary">VK</a>
+        </div></div>
+        <nav aria-label="Навигация в подвале" className="min-w-0"><h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Навигация</h3><ul className="mt-5 space-y-3.5 text-xs">{nav.map(item => <li key={item.href}><a href={item.href} className="transition-colors hover:text-primary">{item.label}</a></li>)}<li><a href="#booking" className="transition-colors hover:text-primary">Запись на сервис</a></li></ul></nav>
+        <div className="min-w-0"><h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Контакты</h3><ul className="mt-5 space-y-3.5 text-xs">
+          <li><a href="tel:+74951234567" className="flex items-center gap-2.5 transition-colors hover:text-primary"><Phone className="size-3.5 shrink-0 text-primary" />+7 (495) 123-45-67</a></li>
+          <li><a href="mailto:info@tochka-auto.ru" className="flex items-center gap-2.5 transition-colors hover:text-primary"><Mail className="size-3.5 shrink-0 text-primary" />info@tochka-auto.ru</a></li>
+          <li className="flex items-start gap-2.5"><MapPin className="mt-0.5 size-3.5 shrink-0 text-primary" /><span>Москва, ул. Автомобильная, 12</span></li>
+        </ul></div>
+        <div className="min-w-0"><h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Режим работы</h3><ul className="mt-5 space-y-3.5 text-xs">
+          <li className="flex items-center gap-2.5"><Clock3 className="size-3.5 shrink-0 text-primary" />Пн–Вс · 09:00–20:00</li>
+          <li className="text-muted-foreground">Без выходных и перерывов</li>
+          <li><Button asChild variant="garage" size="sm" className="mt-1"><a href="#booking">Записаться <ArrowUpRight /></a></Button></li>
+        </ul></div>
+      </div>
+      <div className="border-t border-border"><div className="site-container flex flex-col gap-3 py-6 sm:flex-row sm:items-center sm:justify-between"><span className="text-[10px] text-muted-foreground">© {new Date().getFullYear()} ТОЧКА. Все права защищены.</span><Button variant="link" className="justify-start p-0 text-[10px] text-muted-foreground" onClick={() => setPolicyOpen(true)}>Политика конфиденциальности <ArrowUpRight className="size-3" /></Button></div></div>
+    </footer>
+
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur-sm md:hidden">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-4 py-3">
+        <a href="tel:+74951234567" aria-label="Позвонить в автосервис" className="flex size-11 shrink-0 items-center justify-center rounded-md border border-border text-primary"><Phone className="size-5" /></a>
+        <Button asChild variant="garage" size="cta" className="w-full justify-center"><a href="#booking">Записаться на сервис <ArrowUpRight className="ml-2" /></a></Button>
+      </div>
+    </div>
 
     <Dialog open={success} onOpenChange={setSuccess}><DialogContent className="max-w-[calc(100%-32px)] sm:max-w-md rounded-lg p-8 text-center"><div className="mx-auto flex size-16 items-center justify-center rounded-full bg-primary/10"><CheckCheck className="size-8 text-primary" /></div><DialogTitle className="text-2xl">Спасибо за вашу заявку!</DialogTitle><DialogDescription className="text-sm leading-7">Наш менеджер перезвонит вам в течение 15 минут, чтобы подтвердить запись.</DialogDescription><p className="text-[11px] text-muted-foreground">Демонстрационная запись. Данные не отправлены.</p><Button variant="garage" size="cta" onClick={() => setSuccess(false)}>Отлично <Check /></Button></DialogContent></Dialog>
     <Dialog open={policyOpen} onOpenChange={setPolicyOpen}><DialogContent className="max-w-[calc(100%-32px)] sm:max-w-lg rounded-lg"><DialogTitle>Политика конфиденциальности</DialogTitle><DialogDescription className="leading-7">Это демонстрационная страница автосервиса. Данные формы не передаются и не сохраняются. Перед запуском реальной записи необходимо добавить сведения об организации, условия обработки персональных данных и действующую политику конфиденциальности.</DialogDescription><Button variant="garage" onClick={() => setPolicyOpen(false)}>Понятно</Button></DialogContent></Dialog>
