@@ -37,6 +37,8 @@ function Index() {
   const [success, setSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
   const today = new Date();
@@ -64,6 +66,19 @@ function Index() {
     setService("");
     setMonth("");
     setDay("");
+    setFullName("");
+    setPhone("");
+  }
+  function handleNameChange(value: string) {
+    const cyrillicOnly = value.replace(/[^а-яёА-ЯЁ\s-]/g, "").slice(0, 15);
+    const capitalized = cyrillicOnly.replace(/(^|[\s-])([а-яё])/g, (_, sep, ch) => sep + ch.toUpperCase());
+    setFullName(capitalized);
+  }
+  function handlePhoneChange(value: string) {
+    let digits = value.replace(/\D/g, "");
+    if (digits.startsWith("7") || digits.startsWith("8")) digits = digits.slice(1);
+    digits = digits.slice(0, 10);
+    setPhone(digits === "" ? "" : "+7" + digits);
   }
   const nav = [{ href: "#services", label: "Услуги" }, { href: "#about", label: "Почему мы" }, { href: "#contacts", label: "Контакты" }];
   return <div>
