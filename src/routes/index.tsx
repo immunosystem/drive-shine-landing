@@ -62,7 +62,8 @@ function Index() {
     setSuccess(true);
     form.reset();
     setService("");
-    setDate("");
+    setMonth("");
+    setDay("");
   }
   const nav = [{ href: "#services", label: "Услуги" }, { href: "#about", label: "Почему мы" }, { href: "#contacts", label: "Контакты" }];
   return <div>
