@@ -158,7 +158,8 @@ function Index() {
               <label className="form-field sm:col-span-2">Удобное время<select name="timeSlot" required defaultValue="" className="form-control"><option value="" disabled>Выберите время</option><option value="morning">Утро · 09:00–12:00</option><option value="afternoon">День · 12:00–17:00</option><option value="evening">Вечер · 17:00–20:00</option></select></label>
             </div>
             <p className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground"><Phone className="size-3.5 shrink-0 text-primary" />Мы перезвоним вам в ближайшее время, чтобы подтвердить запись.</p>
-            <Button type="submit" variant="garage" size="cta" className="mt-6 w-full justify-between">Подтвердить запись <ArrowRight /></Button>
+            <Button type="submit" variant="garage" size="cta" disabled={sending} className="mt-6 w-full justify-between">{sending ? "Отправляем…" : "Подтвердить запись"} <ArrowRight /></Button>
+            {sendError && <p className="mt-3 text-center text-[11px] font-semibold text-destructive">Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.</p>}
             <p className="mt-4 text-center text-[10px] leading-5 text-muted-foreground">Нажимая кнопку, вы соглашаетесь с <button type="button" className="underline underline-offset-2 hover:text-foreground" onClick={() => setPolicyOpen(true)}>политикой конфиденциальности</button></p>
           </form>
         </div>
