@@ -64,7 +64,7 @@ function Index() {
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
     const data = new FormData(form);
-    const dateLabel = month !== "" && day !== "" ? `${day} ${MONTHS[monthIndex].toLowerCase()} ${year}` : "";
+    const dateLabel = month !== "" && day !== "" ? `${day} ${MONTHS[monthIndex]!.toLowerCase()} ${year}` : "";
     const payload = {
       orderId: String(Math.floor(1000 + Math.random() * 9000)),
       name: data.get("fullName"),
