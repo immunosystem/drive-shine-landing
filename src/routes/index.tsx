@@ -27,6 +27,7 @@ const services = [
   { name: "Обслуживание кондиционера", icon: Wind, description: "Диагностика, заправка и чистка. Свежесть в каждой поездке.", detail: "от 45 минут", price: "от 2 000 ₽" },
 ];
 const MONTHS = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const MONTHS_GEN = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
 const daysInMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate();
 
 function Brand() {
@@ -56,18 +57,45 @@ function Index() {
     const lowest = Number(value) === today.getMonth() && y === today.getFullYear() ? today.getDate() : 1;
     if (chosen < lowest || chosen > daysInMonth(y, Number(value))) setDay("");
   }
-  function submitBooking(event: FormEvent<HTMLFormElement>) {
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
+  const TIME_LABELS: Record<string, string> = { morning: "Утро · 09:00–12:00", afternoon: "День · 12:00–17:00", evening: "Вечер · 17:00–20:00" };
+  async function submitBooking(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
-    // Integration point: new FormData(form) contains all fields for a future POST.
-    setSuccess(true);
-    form.reset();
-    setService("");
-    setMonth("");
-    setDay("");
-    setFullName("");
-    setPhone("");
+    const data = new FormData(form);
+    const dateLabel = month !== "" && day !== "" ? `${day} ${MONTHS_GEN[monthIndex]} ${year}` : "";
+    const payload = {
+      orderId: String(Math.floor(1000 + Math.random() * 9000)),
+      name: data.get("fullName"),
+      phone: data.get("phone"),
+      brand: data.get("carModel"),
+      service: data.get("service"),
+      date: dateLabel,
+      time: TIME_LABELS[String(data.get("timeSlot"))] ?? "",
+    };
+    setSending(true);
+    setSendError(false);
+    try {
+      const response = await fetch("https://basoed.app.n8n.cloud/webhook/auto-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      setSuccess(true);
+      form.reset();
+      setService("");
+      setMonth("");
+      setDay("");
+      setFullName("");
+      setPhone("");
+    } catch {
+      setSendError(true);
+    } finally {
+      setSending(false);
+    }
   }
   function handleNameChange(value: string) {
     const cyrillicOnly = value.replace(/[^а-яёА-ЯЁ\s-]/g, "").slice(0, 15);
@@ -131,7 +159,8 @@ function Index() {
               <label className="form-field sm:col-span-2">Удобное время<select name="timeSlot" required defaultValue="" className="form-control"><option value="" disabled>Выберите время</option><option value="morning">Утро · 09:00–12:00</option><option value="afternoon">День · 12:00–17:00</option><option value="evening">Вечер · 17:00–20:00</option></select></label>
             </div>
             <p className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground"><Phone className="size-3.5 shrink-0 text-primary" />Мы перезвоним вам в ближайшее время, чтобы подтвердить запись.</p>
-            <Button type="submit" variant="garage" size="cta" className="mt-6 w-full justify-between">Подтвердить запись <ArrowRight /></Button>
+            <Button type="submit" variant="garage" size="cta" disabled={sending} className="mt-6 w-full justify-between">{sending ? "Отправляем…" : "Подтвердить запись"} <ArrowRight /></Button>
+            {sendError && <p className="mt-3 text-center text-[11px] font-semibold text-destructive">Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.</p>}
             <p className="mt-4 text-center text-[10px] leading-5 text-muted-foreground">Нажимая кнопку, вы соглашаетесь с <button type="button" className="underline underline-offset-2 hover:text-foreground" onClick={() => setPolicyOpen(true)}>политикой конфиденциальности</button></p>
           </form>
         </div>
