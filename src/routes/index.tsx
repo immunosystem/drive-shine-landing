@@ -19,12 +19,12 @@ export const Route = createFileRoute("/")({
 });
 
 const services = [
-  { name: "Замена масла", icon: Droplets, description: "Масло, фильтры и всё необходимое для долгой жизни двигателя.", detail: "от 30 минут" },
-  { name: "Тормозная система", icon: Disc3, description: "Замена колодок и дисков. Уверенность в каждом торможении.", detail: "от 60 минут" },
-  { name: "Компьютерная диагностика", icon: ScanLine, description: "Найдём причину неисправности, а не просто сбросим ошибку.", detail: "от 30 минут" },
-  { name: "Ремонт подвески", icon: Settings2, description: "Без стуков и вибраций. Вернём комфорт и управляемость.", detail: "от 90 минут" },
-  { name: "Ремонт двигателя", icon: Cog, description: "От небольшого ремонта до капитального восстановления.", detail: "после диагностики" },
-  { name: "Обслуживание кондиционера", icon: Wind, description: "Диагностика, заправка и чистка. Свежесть в каждой поездке.", detail: "от 45 минут" },
+  { name: "Замена масла", icon: Droplets, description: "Масло, фильтры и всё необходимое для долгой жизни двигателя.", detail: "от 30 минут", price: "от 1 500 ₽" },
+  { name: "Тормозная система", icon: Disc3, description: "Замена колодок и дисков. Уверенность в каждом торможении.", detail: "от 60 минут", price: "от 3 000 ₽" },
+  { name: "Компьютерная диагностика", icon: ScanLine, description: "Найдём причину неисправности, а не просто сбросим ошибку.", detail: "от 30 минут", price: "от 1 000 ₽" },
+  { name: "Ремонт подвески", icon: Settings2, description: "Без стуков и вибраций. Вернём комфорт и управляемость.", detail: "от 90 минут", price: "от 2 500 ₽" },
+  { name: "Ремонт двигателя", icon: Cog, description: "От небольшого ремонта до капитального восстановления.", detail: "после диагностики", price: "от 8 000 ₽" },
+  { name: "Обслуживание кондиционера", icon: Wind, description: "Диагностика, заправка и чистка. Свежесть в каждой поездке.", detail: "от 45 минут", price: "от 2 000 ₽" },
 ];
 const MONTHS = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 const daysInMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate();
@@ -112,7 +112,7 @@ function Index() {
 
       <section id="services" className="site-container py-16 md:py-20">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4"><div className="min-w-0"><p className="eyebrow text-primary mb-3">ЗАБОТА О ВАШЕМ АВТО</p><h2 className="section-heading">Всё, что нужно вашему автомобилю</h2><p className="mt-4 text-sm text-muted-foreground">От планового ТО до сложного ремонта — в одном месте.</p></div><span className="hidden pb-1 text-[11px] text-muted-foreground lg:block">01 — УСЛУГИ</span></div>
-        <div className="mt-9 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{services.map(({ name, icon: Icon, description, detail }) => <article key={name} className="service-card group flex flex-col"><div className="flex items-center justify-between"><div className="service-icon"><Icon className="size-6" strokeWidth={1.6} /></div><span className="text-[10px] text-muted-foreground flex items-center gap-1.5"><Clock3 className="size-3" />{detail}</span></div><h3 className="mt-6 text-[16px] font-bold">{name}</h3><p className="mt-2.5 text-xs leading-6 text-muted-foreground flex-1">{description}</p><a href="#booking" onClick={() => setService(name)} className="mt-6 flex items-center justify-between text-xs font-bold text-primary">Записаться <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></a></article>)}</div>
+        <div className="mt-9 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{services.map(({ name, icon: Icon, description, detail, price }) => <article key={name} className="service-card group flex flex-col"><div className="flex items-center justify-between"><div className="service-icon"><Icon className="size-6" strokeWidth={1.6} /></div><span className="text-[10px] text-muted-foreground flex items-center gap-1.5"><Clock3 className="size-3" />{detail}</span></div><h3 className="mt-6 text-[16px] font-bold">{name}</h3><p className="mt-2.5 text-xs leading-6 text-muted-foreground flex-1">{description}</p><p className="mt-4 text-sm font-bold">{price}</p><a href="#booking" onClick={() => setService(name)} className="mt-4 flex items-center justify-between text-xs font-bold text-primary">Записаться <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></a></article>)}</div>
       </section>
 
       <section id="booking" className="border-y border-border bg-secondary/30 py-16 md:py-20">
